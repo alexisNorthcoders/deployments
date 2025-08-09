@@ -1,22 +1,22 @@
 services:
-    app:
-        image: alexiscreoulo/clipcloud:latest
-        ports:
-            - "4500:4500"
-        volumes:
-            - sqlite-data:/app/DB
-        env_file:
-            - .env
-        depends_on:
-            - redis
+  app:
+    image: alexiscreoulo/clipcloud:latest
+    ports:
+      - "4500:4500"
+    volumes:
+      - db-data:/app/DB
+    env_file:
+      - .env
+    depends_on:
+      - redis
 
-redis:
+  redis:
     image: redis:7
     ports:
-        - "6739:6739"
+      - "6379:6379"
     volumes:
-        - redis-data:/data
+      - redis-data:/data
 
 volumes:
-    sqlite-data:
-    redis-data:
+  db-data:
+  redis-data:  

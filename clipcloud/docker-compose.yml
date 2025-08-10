@@ -5,6 +5,7 @@ services:
       - "4500:4500"
     volumes:
       - db-data:/app/DB
+      - uploads-data:/app/uploads
     env_file:
       - .env
     depends_on:
@@ -19,4 +20,5 @@ services:
 
 volumes:
   db-data:
-  redis-data:  
+  redis-data:
+  uploads-data:

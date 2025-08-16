@@ -1,0 +1,11 @@
+services:
+  taskmanager:
+    image: alexiscreoulo/taskmanager:latest
+    container_name: taskmanager
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
+    restart: unless-stopped

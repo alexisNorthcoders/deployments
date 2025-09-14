@@ -65,6 +65,19 @@ services:
     networks:
       - taskmanager-network
 
+  taskmanager-client:
+    image: alexiscreoulo/taskmanager-client:latest
+    container_name: taskmanager-client
+    restart: unless-stopped
+    depends_on:
+      taskmanager:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    networks:
+      - taskmanager-network
+
+
 volumes:
   postgres_data:
     driver: local

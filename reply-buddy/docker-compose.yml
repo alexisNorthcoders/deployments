@@ -1,0 +1,14 @@
+services:
+  app:
+    image: reply-buddy:latest
+    build: ../../reply-buddy
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      - db-data:/data
+    env_file:
+      - .env
+
+volumes:
+  db-data:

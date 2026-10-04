@@ -1,0 +1,64 @@
+server {
+    server_name alexisraspberry.duckdns.org;
+
+    include snippets/security-headers.conf;
+
+    # Nothing public lives at the root; only the routes below exist.
+    location / {
+        return 404;
+    }
+
+    # The two games and the zigzag score API (snippets/pi-games.conf)
+    include snippets/pi-games.conf;
+
+    # Portfolio contact form (WhatsappBot/Portfolio, port 5555). Rate-limited
+    # here; the app also caps fields and public messages per day.
+    location = /contact {
+        limit_req zone=forms_per_ip burst=2 nodelay;
+        limit_req zone=forms_global burst=10 nodelay;
+        client_max_body_size 20k;
+
+        proxy_pass http://127.0.0.1:5555;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /contentful {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_cache_bypass $http_upgrade;
+        proxy_hide_header X-Powered-By;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/alexisraspberry.duckdns.org-0001/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/alexisraspberry.duckdns.org-0001/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+server {
+    if ($host = alexisraspberry.duckdns.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+    server_name alexisraspberry.duckdns.org;
+    listen 80;
+    return 404; # managed by Certbot
+}
+
+# Catch-all for local IP and other hostnames (the LAN: http://raspberrypi.local/...)
+server {
+    listen 80 default_server;
+    server_name _;
+
+    include snippets/agent-runner-office.conf;
+    include snippets/pi-games.conf;
+    include snippets/pi-lan.conf;
+
+}

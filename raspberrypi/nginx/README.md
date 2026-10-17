@@ -5,10 +5,10 @@ mirror `/etc/nginx`: each file here is installed at the same path there.
 
 | File | What it does |
 |---|---|
-| `sites-available/alexisraspberry.duckdns.org` | The server blocks. Public (443): the two games, the portfolio contact form (`/contact`, port 5555), the contentful app (`/contentful`, port 4000) and the chess trainer (`/chess-trainer/`); everything else is 404. LAN (port 80 default server): the games, the chess trainer, monitor-canvas and the agent-runner office dashboard. |
+| `sites-available/alexisraspberry.duckdns.org` | The server blocks. Public (443): the two games, the portfolio contact form (`/contact`, port 5555), the contentful app (`/contentful`, port 4000) and the chess trainer (`/chess-trainer/`); everything else is 404. LAN (port 80 default server): the games, the chess trainer, monitor-canvas, the reddit-bot dashboard and the agent-runner office dashboard. |
 | `snippets/pi-games.conf` | `/zigzag/` and `/kings-and-pigs/`. Each serves only its page and the files it loads; anything else under its path, dotfiles included, is not found. Proxies `/zigzag/score` to go-server (go-server-dev, port 8080), rate-limited. |
 | `snippets/pi-chess-trainer.conf` | `/chess-trainer/`, proxied to the PM2 app on port 3100. LAN addresses get in directly; anyone else needs the basic-auth login. |
-| `snippets/pi-lan.conf` | `/monitor-canvas/`, LAN only. |
+| `snippets/pi-lan.conf` | `/monitor-canvas/` and `/reddit-dashboard/` (reddit-bot's nightly static export), LAN only. |
 | `snippets/security-headers.conf` | HSTS, nosniff and Referrer-Policy. Included at server level and again in every location with its own `add_header`. |
 | `conf.d/limits.conf` | `server_tokens off`, and the rate-limit zones for the public forms (only POSTs count). |
 | `conf.d/extra-mime-types.conf` | `.mjs`, `.wav` and `.ttf`, which nginx's `mime.types` lacks. |

@@ -37,6 +37,9 @@ server {
         proxy_hide_header X-Powered-By;
     }
 
+    # Chess trainer, behind a login (snippets/pi-chess-trainer.conf)
+    include snippets/pi-chess-trainer.conf;
+
     listen 443 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/alexisraspberry.duckdns.org-0001/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/alexisraspberry.duckdns.org-0001/privkey.pem; # managed by Certbot
@@ -60,5 +63,6 @@ server {
     include snippets/agent-runner-office.conf;
     include snippets/pi-games.conf;
     include snippets/pi-lan.conf;
+    include snippets/pi-chess-trainer.conf;
 
 }
